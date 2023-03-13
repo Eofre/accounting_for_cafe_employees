@@ -15,6 +15,7 @@
             <th scope="col">Должность</th>
             <th scope="col">Ставка в час</th>
             <th scope="col">Номер телефона</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody th:each="employee : ${employees}">
@@ -24,6 +25,7 @@
                 <td th:text="${employee.position}"></td>
                 <td th:text="${employee.hourlyRate}"></td>
                 <td th:text="${employee.phoneNumber}"></td>
+                <td><button class="btn btn-danger">Удалить</button></td>
             </tr>
         </tbody>
     </table>
