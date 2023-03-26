@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/login","/registration")
-                .permitAll()
+                .requestMatchers("/employees/**").hasAuthority("ADMIN")
+                .requestMatchers("/login","/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -39,11 +39,15 @@ public class SecurityConfig {
                 .logoutUrl("/logout") // URL для выхода из системы
                 .logoutSuccessUrl("/login") // URL для перенаправления после выхода
                 .permitAll()
-//                .and()
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/");
+                })
+                .and()
 //                .sessionManagement()
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-//                .logout((logout) -> logout.permitAll())
+
                 .authenticationProvider(authenticationProvider);
 //                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

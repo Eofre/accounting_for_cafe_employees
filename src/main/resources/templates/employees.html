@@ -22,8 +22,8 @@
             <tr>
                 <th th:text="${employee.id}" scope="row"></th>
                 <td th:text="${employee.fullName}"></td>
-                <td th:text="${employee.position}"></td>
-                <td th:text="${employee.hourlyRate}"></td>
+                <td th:text="${employee.position.name}"></td>
+                <td th:text="${employee.position.hourlyRate}"></td>
                 <td th:text="${employee.phoneNumber}"></td>
                 <td><button class="btn btn-danger">Удалить</button></td>
             </tr>
