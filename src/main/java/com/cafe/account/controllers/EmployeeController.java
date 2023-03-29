@@ -8,7 +8,6 @@ import com.cafe.account.repositories.EmployeeRepository;
 import com.cafe.account.service.EmployeeService;
 import com.cafe.account.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +30,7 @@ public class EmployeeController {
     private PositionService positionService;
 
 
-    @GetMapping("/employees")
+    @GetMapping("/employee/all")
     public String employees(Model model) {
         Iterable<Employee> employees = employeeRepository.findAll();
         model.addAttribute("employees", employees);
@@ -39,7 +38,7 @@ public class EmployeeController {
     }
 
 //    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/employees/add")
+    @GetMapping("/employee/add")
     public String employeesAdd(Model model) {
         List<Position> positions = positionService.findAll();
         model.addAttribute("employeeDto", new EmployeeDto());
@@ -47,12 +46,12 @@ public class EmployeeController {
         return "employee-add";
     }
 
-    @PostMapping("/employees/add")
+    @PostMapping("/employee/add")
     public String employeesPostAdd(@ModelAttribute("employeeDto") EmployeeDto employeeDto,
                                    Model model) {
         try {
             employeeService.create(employeeDto);
-            return "redirect:/"; // перенаправляем на главную страницу
+            return "redirect:/employee/all"; // перенаправляем на главную страницу
         } catch (AuthenticationException ex) {
             model.addAttribute("error", "Invalid username or password");
             return "employee-add"; // возвращаем страницу входа и сообщение об ошибке

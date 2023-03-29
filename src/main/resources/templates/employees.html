@@ -7,27 +7,29 @@
 </head>
 <body>
     <header th:insert="~{blocks/navbar :: navbar}" />
-    <table class="table">
-        <thead class="thead-light">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">ФИО</th>
-            <th scope="col">Должность</th>
-            <th scope="col">Ставка в час</th>
-            <th scope="col">Номер телефона</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody th:each="employee : ${employees}">
-            <tr>
-                <th th:text="${employee.id}" scope="row"></th>
-                <td th:text="${employee.fullName}"></td>
-                <td th:text="${employee.position.name}"></td>
-                <td th:text="${employee.position.hourlyRate}"></td>
-                <td th:text="${employee.phoneNumber}"></td>
-                <td><button class="btn btn-danger">Удалить</button></td>
+    <div class="container">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr class="text-center">
+<!--                <th class="align-middle" scope="col">#</th>-->
+                <th class="align-middle" scope="col">ФИО</th>
+                <th class="align-middle" scope="col">Должность</th>
+                <th class="align-middle" scope="col">Ставка в час</th>
+                <th class="align-middle" scope="col">Номер телефона</th>
+                <th class="align-middle" scope="col"></th>
             </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody th:each="employee : ${employees}">
+            <tr>
+<!--                <th class="text-center align-middle" th:text="${employee.id}" scope="row"></th>-->
+                <td class="text-center align-middle" th:text="${employee.fullName}"></td>
+                <td class="text-center align-middle" th:text="${employee.position.name}"></td>
+                <td class="text-center align-middle" th:text="${employee.position.hourlyRate}"></td>
+                <td class="text-center align-middle" th:text="${employee.phoneNumber}"></td>
+                <td class="text-center align-middle"><button class="btn btn-danger">Удалить</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

@@ -18,9 +18,8 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(unique = true)
     private String name;
 
-    @Column(name = "hourly_rate")
     private Double hourlyRate;
 }

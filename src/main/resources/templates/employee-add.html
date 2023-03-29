@@ -9,35 +9,73 @@
     <header th:insert="~{blocks/navbar :: navbar}" />
     <main>
         <section>
-            <div class="container">
-                <h1>Add Employee</h1>
-                <form th:action="@{/employees/add}" th:object="${employeeDto}" method="post">
-                    <div class="form-group">
-                        <label for="fullName">ФИО сотрудника</label>
-                        <input type="text" class="form-control" id="fullName" th:field="*{fullName}">
+            <div class="container-fluid py-1">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 col-sm-8">
+                        <form class="p-5 rounded" th:action="@{/employee/add}" th:object="${employeeDto}" method="post">
+                            <h2 class="text-center mb-4">Добавление нового сотрудника</h2>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullName" name="fullName" placeholder=" " required>
+                                <label for="fullName">ФИО</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder=" " required>
+                                <label for="phoneNumber">Номер телефона</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <label for="positionId">Должность</label>
+                                <select class="form-control" id="positionId" th:field="*{positionId}">
+                                    <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
+                                </select>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" name="username" placeholder=" " required>
+                                <label for="username">Логин</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" placeholder=" " required>
+                                <label for="password">Пароль</label>
+                            </div>
+                            <div class="d-grid mb-3">
+                                <button class="btn btn-success" type="submit">Добавить сотрудника</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="phoneNumber">Номер телефона</label>
-                        <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}">
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Логин</label>
-                        <input type="text" class="form-control" id="username" th:field="*{username}">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Пароль</label>
-                        <input type="text" class="form-control" id="password" th:field="*{password}">
-                    </div>
-                    <div class="form-group">
-                        <label for="positionId">Должность</label>
-                        <select class="form-control" id="positionId" th:field="*{positionId}">
-                            <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Зарегистрировать</button>
-                </form>
+                </div>
             </div>
         </section>
     </main>
+<!--    <main>-->
+<!--        <section>-->
+<!--            <div class="container">-->
+<!--                <h1>Add Employee</h1>-->
+<!--                <form th:action="@{/employee/add}" th:object="${employeeDto}" method="post">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="fullName">ФИО сотрудника</label>-->
+<!--                        <input type="text" class="form-control" id="fullName" th:field="*{fullName}">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="phoneNumber">Номер телефона</label>-->
+<!--                        <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="username">Логин</label>-->
+<!--                        <input type="text" class="form-control" id="username" th:field="*{username}">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="password">Пароль</label>-->
+<!--                        <input type="text" class="form-control" id="password" th:field="*{password}">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="positionId">Должность</label>-->
+<!--                        <select class="form-control" id="positionId" th:field="*{positionId}">-->
+<!--                            <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                    <button type="submit" class="btn btn-primary">Зарегистрировать</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </section>-->
+<!--    </main>-->
 </body>
 </html>
