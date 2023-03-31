@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    List<Employee> findByUserId(Long userId);
-    Optional<Employee> findByIdAndUserId(Long id, Long userId);
+    Optional<Employee> findByUserId(Long userId);
+
+    Optional<Employee> findByPhoneNumber(String phoneNumber);
 }

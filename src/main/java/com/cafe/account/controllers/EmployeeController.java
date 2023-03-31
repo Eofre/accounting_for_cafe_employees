@@ -8,7 +8,9 @@ import com.cafe.account.repositories.EmployeeRepository;
 import com.cafe.account.service.EmployeeService;
 import com.cafe.account.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,6 @@ public class EmployeeController {
         return "employees";
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/employee/add")
     public String employeesAdd(Model model) {
         List<Position> positions = positionService.findAll();
@@ -51,10 +52,10 @@ public class EmployeeController {
                                    Model model) {
         try {
             employeeService.create(employeeDto);
-            return "redirect:/employee/all"; // перенаправляем на главную страницу
-        } catch (AuthenticationException ex) {
-            model.addAttribute("error", "Invalid username or password");
-            return "employee-add"; // возвращаем страницу входа и сообщение об ошибке
+            return "redirect:/employee/all";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "employee-add";
         }
     }
 }

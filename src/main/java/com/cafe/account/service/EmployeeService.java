@@ -27,23 +27,32 @@ public class EmployeeService {
     @Autowired
     private UserRepository userRepository;
 
-    public Employee create (EmployeeDto employeeDto) {
-        Employee employee = new Employee();
-        employee.setFullName(employeeDto.getFullName());
-        employee.setPhoneNumber(employeeDto.getPhoneNumber());
+    public void create (EmployeeDto employeeDto) {
+        String username = employeeDto.getUsername();
+        String phoneNumber = employeeDto.getPhoneNumber();
 
-        Position position = positionRepository.findById(employeeDto.getPositionId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid position id: " + employeeDto.getPositionId()));
-        employee.setPosition(position);
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("Пользователь с логином: " + username + " уже существует");
+        }
+        else if (employeeRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new IllegalArgumentException("Работник с телефоном: " + phoneNumber + " уже существует");
+        } else {
+            Employee employee = new Employee();
+            employee.setFullName(employeeDto.getFullName());
+            employee.setPhoneNumber(employeeDto.getPhoneNumber());
 
-        User user = new User();
-        user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
-        user.setUsername(employeeDto.getUsername());
-        user.setRole(Role.USER);
-        userRepository.save(user);
-        employee.setUser(user);
+            Position position = positionRepository.findById(employeeDto.getPositionId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid position id: " + employeeDto.getPositionId()));
+            employee.setPosition(position);
 
-        return employeeRepository.save(employee);
+            User user = new User();
+            user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
+            user.setUsername(employeeDto.getUsername());
+            user.setRole(Role.USER);
+            userRepository.save(user);
+            employee.setUser(user);
+
+            employeeRepository.save(employee);
+        }
     }
-
 }
