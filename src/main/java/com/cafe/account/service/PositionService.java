@@ -2,7 +2,9 @@ package com.cafe.account.service;
 
 import com.cafe.account.dto.position.PositionDto;
 import com.cafe.account.dto.position.PositionUpdateDto;
+import com.cafe.account.models.Employee;
 import com.cafe.account.models.Position;
+import com.cafe.account.repositories.EmployeeRepository;
 import com.cafe.account.repositories.PositionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class PositionService {
 
     @Autowired
     private PositionRepository positionRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public List<Position> findAll() {
         return positionRepository.findAll();
@@ -30,7 +35,12 @@ public class PositionService {
     }
 
     public void deleteById(Long id) {
-        positionRepository.deleteById(id);
+        List<Employee> employees = employeeRepository.findByPositionId(id);
+        if (!employees.isEmpty()) {
+            throw new IllegalArgumentException("Нельзя удалить данную должность, так как есть работники с такой должностью");
+        } else {
+            positionRepository.deleteById(id);
+        }
     }
 
     public PositionUpdateDto getPositionById(Long id) {
@@ -44,7 +54,8 @@ public class PositionService {
     }
 
     public void updatePosition(PositionUpdateDto positionUpdateDto) {
-        Position position = positionRepository.findById(positionUpdateDto.getId()).orElseThrow();
+        Position position = positionRepository.findById(positionUpdateDto.getId()).orElseThrow(
+                () -> new EntityNotFoundException("Должность с id=" + positionUpdateDto.getId() + " не найдена"));
 
         if (positionRepository.findByName(positionUpdateDto.getName()).isPresent() && !position.getName().equals(positionUpdateDto.getName())) {
             throw new IllegalArgumentException("Должность " + positionUpdateDto.getName() + " уже существует!");
@@ -54,5 +65,9 @@ public class PositionService {
             positionRepository.save(position);
         }
 
+    }
+
+    public List<Position> findByNameContaining(String name) {
+        return positionRepository.findByNameContaining(name);
     }
 }

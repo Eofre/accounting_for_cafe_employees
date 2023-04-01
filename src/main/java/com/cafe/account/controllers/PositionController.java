@@ -4,14 +4,16 @@ import com.cafe.account.dto.position.PositionDto;
 import com.cafe.account.dto.position.PositionUpdateDto;
 import com.cafe.account.models.Position;
 import com.cafe.account.service.PositionService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 public class PositionController {
@@ -19,10 +21,22 @@ public class PositionController {
     @Autowired
     private PositionService positionService;
 
+    @GetMapping("/position/**")
+    public String handleUnknownUrls() {
+        return "redirect:/position/all";
+    }
+
     @GetMapping("/position/all")
     public String positions(@RequestParam(required = false) String search, Model model) {
-        List<Position> positions = positionService.findAll();
+        List<Position> positions;
+
+        if (search != null) {
+            positions = positionService.findByNameContaining(search);
+        } else {
+            positions = positionService.findAll();
+        }
         model.addAttribute("positions", positions);
+
         return "positions";
     }
 
@@ -34,9 +48,14 @@ public class PositionController {
 
     @GetMapping("/position/{id}/edit")
     public String positionEdit(@PathVariable("id") Long id, Model model) {
-        PositionUpdateDto positionUpdateDto = positionService.getPositionById(id);
-        model.addAttribute("position", positionUpdateDto);
-        return "position-edit";
+        try {
+            PositionUpdateDto positionUpdateDto = positionService.getPositionById(id);
+            model.addAttribute("position", positionUpdateDto);
+            return "position-edit";
+        } catch (EntityNotFoundException e) {
+            return "redirect:/position/all";
+        }
+
     }
 
     @PostMapping("/position/add")
@@ -47,13 +66,18 @@ public class PositionController {
             return "redirect:/position/all"; // перенаправляем на главную страницу
         } catch (AuthenticationException ex) {
             model.addAttribute("error", "Invalid username or password");
-            return "position-add"; // возвращаем страницу входа и сообщение об ошибке
+            return "position-add";
         }
     }
 
     @PostMapping("/position/{id}/remove")
-    public String positionPostDelete(@PathVariable("id") Long id) {
-        positionService.deleteById(id);
+    public String positionPostDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            positionService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Должность успешно удаленна!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/position/all";
     }
 

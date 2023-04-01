@@ -8,28 +8,59 @@
 <body>
     <header th:insert="~{blocks/navbar :: navbar}" />
     <div class="container">
-        <div class="d-flex justify-content-end mb-3">
-            <a href="/employee/add" class="btn btn-success">Добавить сотрудника</a>
+        <div class="row mb-3 mt-3">
+            <div class="col-md-6 d-flex justify-content-start w-70">
+                <form class="d-flex w-100">
+                    <input class="form-control me-2 w-100" type="search" name="search" placeholder="Например: Иванов Иван Иванович" aria-label="Поиск">
+                    <button class="btn btn-outline-success" type="submit">Найти</button>
+                </form>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                <a href="/employee/add" class="btn btn-success">Добавить сотрудника</a>
+            </div>
         </div>
-        <table class="table table-bordered">
+        <div th:if="${error}">
+            <div class="alert alert-danger" role="alert">
+                <p th:text="${error}"></p>
+            </div>
+        </div>
+        <div th:if="${success}">
+            <div class="alert alert-success" role="alert">
+                <p th:text="${success}"></p>
+            </div>
+        </div>
+        <div th:if="${employees.isEmpty()}">
+            <div class="alert alert-warning" role="alert">
+                <p>Поиск не дал результатов</p>
+            </div>
+        </div>
+        <table th:if="${!employees.isEmpty()}" class="table table-bordered">
             <thead class="thead-light">
             <tr class="text-center">
-<!--                <th class="align-middle" scope="col">#</th>-->
                 <th class="align-middle" scope="col">ФИО</th>
                 <th class="align-middle" scope="col">Должность</th>
                 <th class="align-middle" scope="col">Ставка в час</th>
                 <th class="align-middle" scope="col">Номер телефона</th>
                 <th class="align-middle" scope="col"></th>
+                <th class="align-middle" scope="col"></th>
             </tr>
             </thead>
             <tbody th:each="employee : ${employees}">
             <tr>
-<!--                <th class="text-center align-middle" th:text="${employee.id}" scope="row"></th>-->
                 <td class="text-center align-middle" th:text="${employee.fullName}"></td>
                 <td class="text-center align-middle" th:text="${employee.position.name}"></td>
                 <td class="text-center align-middle" th:text="${employee.position.hourlyRate}"></td>
                 <td class="text-center align-middle" th:text="${employee.phoneNumber}"></td>
-                <td class="text-center align-middle"><button class="btn btn-danger">Удалить</button></td>
+                <td class="text-center align-middle">
+                    <a th:href="@{/employee/{id}/edit(id=${employee.id})}" class="btn btn-success">
+                        Редактировать
+                    </a>
+                </td>
+                <td class="text-center align-middle">
+                    <form th:action="@{/employee/{id}/remove(id=${employee.id})}" method="post">
+                        <button class="btn btn-danger">Удалить</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

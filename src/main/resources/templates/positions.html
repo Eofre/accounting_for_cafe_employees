@@ -8,10 +8,33 @@
 <body>
 <header th:insert="~{blocks/navbar :: navbar}" />
 <div class="container">
-    <div class="d-flex justify-content-end mb-3">
-        <a href="/position/add" class="btn btn-success">Добавить должность</a>
+    <div class="row mb-3 mt-3">
+        <div class="col-md-6 d-flex justify-content-start w-70">
+            <form class="d-flex w-100">
+                <input class="form-control me-2 w-100" type="search" name="search" placeholder="Например: Официант" aria-label="Поиск">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+            </form>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+            <a href="/position/add" class="btn btn-success">Добавить должность</a>
+        </div>
     </div>
-    <table class="table table-bordered">
+    <div th:if="${error}">
+        <div class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+    </div>
+    <div th:if="${success}">
+        <div class="alert alert-success" role="alert">
+            <p th:text="${success}"></p>
+        </div>
+    </div>
+    <div th:if="${positions.isEmpty()}">
+        <div class="alert alert-warning" role="alert">
+            <p>Поиск не дал результатов</p>
+        </div>
+    </div>
+    <table th:if="${!positions.isEmpty()}" class="table table-bordered">
         <thead class="thead-light">
         <tr class="text-center">
             <th class="align-middle" scope="col">Должность</th>
