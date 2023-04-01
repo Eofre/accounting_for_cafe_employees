@@ -14,6 +14,12 @@
                     <div class="col-lg-4 col-md-6 col-sm-8">
                         <form class="p-5 rounded" th:action="@{/employee/add}" th:object="${employeeDto}" method="post">
                             <h2 class="text-center mb-4">Добавление нового сотрудника</h2>
+                            <div th:if="${positions.isEmpty()}">
+                                <div class="alert alert-danger" role="alert">
+                                    <p>Список должностей пуст! Из-за этого создать работника не получится!
+                                        Для начала добавьте должности!</p>
+                                </div>
+                            </div>
                             <div th:if="${error}">
                                 <div class="alert alert-danger" role="alert">
                                     <p th:text="${error}"></p>
@@ -27,9 +33,12 @@
                                 <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder=" " required>
                                 <label for="phoneNumber">Номер телефона</label>
                             </div>
-                            <div class="form-floating mb-3">
+                            <div th:if="${!positions.isEmpty()}" class="form-floating mb-3">
                                 <label for="positionId">Должность</label>
-                                <select class="form-control" id="positionId" th:field="*{positionId}">
+<!--                                <select class="form-control" id="positionId" th:field="*{positionId}" required>-->
+<!--                                    <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>-->
+<!--                                </select>-->
+                                <select class="form-control" id="positionId" name="positionId" required>
                                     <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
                                 </select>
                             </div>
@@ -42,7 +51,8 @@
                                 <label for="password">Пароль</label>
                             </div>
                             <div class="d-grid mb-3">
-                                <button class="btn btn-success" type="submit">Добавить сотрудника</button>
+                                <button th:if="${!positions.isEmpty()}" class="btn btn-success" type="submit">Добавить сотрудника</button>
+                                <button th:if="${positions.isEmpty()}" disabled class="btn btn-success" type="submit">Добавить сотрудника</button>
                             </div>
                         </form>
                     </div>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Редактирование сотрудника</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+<header th:insert="~{blocks/navbar :: navbar}"></header>
+<main>
+    <section>
+        <div class="container-fluid py-1">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 col-sm-8">
+                    <form class="p-5 rounded" th:action="@{/employee/{id}/edit(id=${employee.id})}" th:object="${employee}" method="post">
+                        <h2 class="text-center mb-4">Редактирование должности</h2>
+                        <div th:if="${error}">
+                            <div class="alert alert-danger" role="alert">
+                                <p th:text="${error}"></p>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input th:value="${employee.fullName}" type="text" class="form-control" id="fullName" name="fullName" placeholder=" " required>
+                            <label for="fullName">ФИО сотрудника</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input th:value="${employee.phoneNumber}" type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder=" " required>
+                            <label for="phoneNumber">Номер телефона</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label for="position">Должность</label>
+                            <select class="form-control" id="position" required name="position">
+                                <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
+                            </select>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button class="btn btn-success" type="submit">Изменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha384-4oVyS9POlB8d6NECi4sCqUrl4BqWyJkc/rW8Kd6Ujlz6U7kMQwmxKjPG8yTsaJXh"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k0tGvE+k+p3r3qskfjSiIbnA0/q1ZZQm02ZBxPZmOtn7JJYEdk+Dif/Abcz1ilQ/"
+        crossorigin="anonymous"></script>
+</body>
+</html>
