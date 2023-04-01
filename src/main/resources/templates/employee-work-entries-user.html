@@ -24,9 +24,9 @@
     <table th:if="${!entries.isEmpty()}" class="table table-bordered">
         <thead class="thead-light">
         <tr class="text-center">
-            <th class="align-middle" scope="col">Сотрудник</th>
-            <th class="align-middle" scope="col">Должность</th>
-            <th class="align-middle" scope="col">Ставка в час</th>
+<!--            <th class="align-middle" scope="col">Сотрудник</th>-->
+<!--            <th class="align-middle" scope="col">Должность</th>-->
+<!--            <th class="align-middle" scope="col">Ставка в час</th>-->
             <th class="align-middle" scope="col">Отработанные часы</th>
             <th class="align-middle" scope="col">Зарабаток</th>
             <th class="align-middle" scope="col">Дата</th>
@@ -34,9 +34,9 @@
         </thead>
         <tbody th:each="entry : ${entries}">
         <tr>
-            <td class="text-center align-middle" th:text="${entry.employee.fullName}"></td>
-            <td class="text-center align-middle" th:text="${entry.employee.position.name}"></td>
-            <td class="text-center align-middle" th:text="${entry.employee.position.hourlyRate}"></td>
+<!--            <td class="text-center align-middle" th:text="${entry.employee.fullName}"></td>-->
+<!--            <td class="text-center align-middle" th:text="${entry.employee.position.name}"></td>-->
+<!--            <td class="text-center align-middle" th:text="${entry.employee.position.hourlyRate}"></td>-->
             <td class="text-center align-middle" th:text="${entry.workedHours}"></td>
             <td class="text-center align-middle" th:text="${entry.earnings}"></td>
             <td class="text-center align-middle" th:text="${entry.date}"></td>
