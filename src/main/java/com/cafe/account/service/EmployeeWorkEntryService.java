@@ -49,4 +49,12 @@ public class EmployeeWorkEntryService {
     public void deleteById(Long id) {
         employeeWorkEntryRepository.deleteById(id);
     }
+
+    public List<EmployeeWorkEntry> findByEmployee(Employee employee) {
+        return employeeWorkEntryRepository.findAllByEmployee(employee);
+    }
+
+    public List<EmployeeWorkEntry> findAllByDateAndEmployee(LocalDate date, Employee employee) {
+        return employeeWorkEntryRepository.findAllByDateAndEmployee(date, employee);
+    }
 }

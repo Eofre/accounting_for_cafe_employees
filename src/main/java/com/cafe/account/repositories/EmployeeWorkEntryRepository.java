@@ -11,4 +11,6 @@ public interface EmployeeWorkEntryRepository extends JpaRepository<EmployeeWorkE
 
     List<EmployeeWorkEntry> findByEmployeeFullNameContaining(String fullName);
     List<EmployeeWorkEntry> findAllByDate(LocalDate date);
+    List<EmployeeWorkEntry> findAllByEmployee(Employee employee);
+    List<EmployeeWorkEntry> findAllByDateAndEmployee(LocalDate date, Employee employee);
 }

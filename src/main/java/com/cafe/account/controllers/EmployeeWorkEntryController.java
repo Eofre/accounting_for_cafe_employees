@@ -3,6 +3,7 @@ package com.cafe.account.controllers;
 import com.cafe.account.dto.employeeWorkEntry.EmployeeWorkEntryCreateDto;
 import com.cafe.account.models.Employee;
 import com.cafe.account.models.EmployeeWorkEntry;
+import com.cafe.account.service.AuthService;
 import com.cafe.account.service.EmployeeService;
 import com.cafe.account.service.EmployeeWorkEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class EmployeeWorkEntryController {
     private EmployeeWorkEntryService employeeWorkEntryService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private EmployeeService employeeService;
 
     @GetMapping("/timesheet/**")
@@ -33,18 +37,33 @@ public class EmployeeWorkEntryController {
     public String entries(@RequestParam(required = false) String search,
                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                           Model model) {
+        String page = "";
+        List<String> roles = authService.getUserRoles();
         List<EmployeeWorkEntry> employeeWorkEntryList;
-        if (search != null) {
-            employeeWorkEntryList = employeeWorkEntryService.findByEmployeeFullNameContaining(search);
+
+        if (roles.contains("ADMIN")) {
+            if (search != null) {
+                employeeWorkEntryList = employeeWorkEntryService.findByEmployeeFullNameContaining(search);
+            }
+            else if (date != null) {
+                employeeWorkEntryList = employeeWorkEntryService.findAllByDate(date);
+            }
+            else {
+                employeeWorkEntryList = employeeWorkEntryService.findAll();
+            }
+            page = "employee-work-entries";
+        } else {
+            Employee employee = authService.getEmployee();
+            if (date != null) {
+                employeeWorkEntryList = employeeWorkEntryService.findAllByDateAndEmployee(date, employee);
+            } else {
+                employeeWorkEntryList = employeeWorkEntryService.findByEmployee(employee);
+            }
+            page = "employee-work-entries-user";
         }
-        else if (date != null) {
-            employeeWorkEntryList = employeeWorkEntryService.findAllByDate(date);
-        }
-        else {
-            employeeWorkEntryList = employeeWorkEntryService.findAll();
-        }
+
         model.addAttribute("entries", employeeWorkEntryList);
-        return "employee-work-entries";
+        return page;
     }
 
     @GetMapping("/timesheet/entries/add")

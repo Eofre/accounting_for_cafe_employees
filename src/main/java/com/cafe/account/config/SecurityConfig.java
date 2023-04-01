@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/timesheet/entries/all").hasAuthority("USER")
                 .requestMatchers("/employee/**","/position/**","/timesheet/**").hasAuthority("ADMIN")
                 .requestMatchers("/login","/registration").permitAll()
                 .anyRequest().authenticated()
@@ -36,8 +37,8 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .and()
                 .logout()
-                .logoutUrl("/logout") // URL для выхода из системы
-                .logoutSuccessUrl("/login") // URL для перенаправления после выхода
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
                 .permitAll()
                 .and()
                 .exceptionHandling()

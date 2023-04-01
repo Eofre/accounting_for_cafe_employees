@@ -1,7 +1,10 @@
 package com.cafe.account.service;
 
-import com.cafe.account.dto.auth.JwtRequest;
-import com.cafe.account.dto.auth.JwtResponse;
+import com.cafe.account.models.Employee;
+import com.cafe.account.models.User;
+import com.cafe.account.repositories.EmployeeRepository;
+import com.cafe.account.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,19 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Service
 public class AuthService {
 
-    public JwtResponse login(JwtRequest loginRequest) {
-        return null;
-    };
-
-    public JwtResponse refresh(String refreshToken){
-        return null;
-    };
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public List<String> getUserRoles() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -32,4 +33,22 @@ public class AuthService {
         }
         return Collections.emptyList();
     }
+
+    public Optional<User> getUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return userRepository.findByUsername(username);
+    }
+
+    public Employee getEmployee() {
+        return employeeRepository.findByUserId(getUser().orElseThrow().getId());
+    }
 }
+
+//    public JwtResponse login(JwtRequest loginRequest) {
+//        return null;
+//    };
+//
+//public JwtResponse refresh(String refreshToken){
+//        return null;
+//        };
