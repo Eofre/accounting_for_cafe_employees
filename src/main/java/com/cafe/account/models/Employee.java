@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -31,5 +34,7 @@ public class Employee {
     @Column(unique = true)
     private String phoneNumber;
 
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<EmployeeWorkEntry> timesheetList = new ArrayList<>();
 
 }

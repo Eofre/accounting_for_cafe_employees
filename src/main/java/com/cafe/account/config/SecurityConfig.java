@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/employee/**","/position/**").hasAuthority("ADMIN")
+                .requestMatchers("/employee/**","/position/**","/timesheet/**").hasAuthority("ADMIN")
                 .requestMatchers("/login","/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()

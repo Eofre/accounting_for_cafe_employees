@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Журнал рабочего времени сотрудников</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+<header th:insert="~{blocks/navbar :: navbar}" />
+<div class="container">
+    <div class="row mb-3 mt-3">
+        <div class="col-md-4 d-flex justify-content-start">
+            <form class="d-flex w-100">
+                <input class="form-control me-2 w-100" type="search" name="search" placeholder="Например: Иванов Иван Иванович" aria-label="Поиск">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+            </form>
+        </div>
+        <div class="col-md-4 d-flex justify-content-start">
+            <form class="d-flex">
+                <input type="date" class="form-control me-2" id="date" name="date">
+                <button type="submit" class="btn btn-outline-success">Фильтровать</button>
+            </form>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <a href="/timesheet/entries/add" class="btn btn-success">Добавить запись</a>
+        </div>
+    </div>
+<!--    <div class="row mb-3">-->
+<!--        <form class="form-inline">-->
+<!--            <div class="form-group mb-2">-->
+<!--                <label for="date" class="mr-2">Дата:</label>-->
+<!--                <input type="date" class="form-control" id="date" name="date">-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary ml-3">Фильтровать</button>-->
+<!--        </form>-->
+<!--    </div>-->
+    <div th:if="${error}">
+        <div class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+    </div>
+    <div th:if="${success}">
+        <div class="alert alert-success" role="alert">
+            <p th:text="${success}"></p>
+        </div>
+    </div>
+    <div th:if="${entries.isEmpty()}">
+        <div class="alert alert-warning" role="alert">
+            <p>Поиск не дал результатов</p>
+        </div>
+    </div>
+    <table th:if="${!entries.isEmpty()}" class="table table-bordered">
+        <thead class="thead-light">
+        <tr class="text-center">
+            <th class="align-middle" scope="col">Сотрудник</th>
+            <th class="align-middle" scope="col">Должность</th>
+            <th class="align-middle" scope="col">Ставка в час</th>
+            <th class="align-middle" scope="col">Отработанные часы</th>
+            <th class="align-middle" scope="col">Зарабаток</th>
+            <th class="align-middle" scope="col">Дата</th>
+            <th class="align-middle" scope="col"></th>
+        </tr>
+        </thead>
+        <tbody th:each="entry : ${entries}">
+        <tr>
+            <td class="text-center align-middle" th:text="${entry.employee.fullName}"></td>
+            <td class="text-center align-middle" th:text="${entry.employee.position.name}"></td>
+            <td class="text-center align-middle" th:text="${entry.employee.position.hourlyRate}"></td>
+            <td class="text-center align-middle" th:text="${entry.workedHours}"></td>
+            <td class="text-center align-middle" th:text="${entry.earnings}"></td>
+            <td class="text-center align-middle" th:text="${entry.date}"></td>
+            <td class="text-center align-middle">
+                <form th:action="@{/timesheet/entries/{id}/remove(id=${entry.id})}" method="post">
+                    <button class="btn btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

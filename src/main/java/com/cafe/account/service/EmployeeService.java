@@ -73,7 +73,7 @@ public class EmployeeService {
         userRepository.deleteById(idUser);
     }
 
-    public EmployeeUpdateDto getEmployeeById(Long id) {
+    public Employee getEmployeeById(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
         EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto();
@@ -81,7 +81,7 @@ public class EmployeeService {
         employeeUpdateDto.setFullName(employee.getFullName());
         employeeUpdateDto.setPosition(employee.getPosition());
         employeeUpdateDto.setPhoneNumber(employee.getPhoneNumber());
-        return employeeUpdateDto;
+        return employee;
     }
 
     public void updateEmployee(EmployeeUpdateDto employeeUpdateDto) {

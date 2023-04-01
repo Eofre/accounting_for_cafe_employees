@@ -86,8 +86,8 @@ public class EmployeeController {
     public String employeeEdit(@PathVariable("id") Long id, Model model) {
         List<Position> positions = positionService.findAll();
         try {
-            EmployeeUpdateDto employeeUpdateDto = employeeService.getEmployeeById(id);
-            model.addAttribute("employee", employeeUpdateDto);
+            Employee employee = employeeService.getEmployeeById(id);
+            model.addAttribute("employee", employee);
             model.addAttribute("positions", positions);
             return "employee-edit";
         } catch (EntityNotFoundException e) {
