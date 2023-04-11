@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Controller
@@ -37,12 +39,18 @@ public class EmployeeWorkEntryController {
     public String entries(@RequestParam(required = false) String search,
                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                           Model model) {
-        String page = "";
+
+        String template = "";
+
         List<String> roles = authService.getUserRoles();
         List<EmployeeWorkEntry> employeeWorkEntryList;
 
         if (roles.contains("ADMIN")) {
-            if (search != null) {
+
+            if(search != null && date != null) {
+                employeeWorkEntryList = employeeWorkEntryService.findByEmployeeFullNameContainingAndDate(search, date);
+            }
+            else if (search != null) {
                 employeeWorkEntryList = employeeWorkEntryService.findByEmployeeFullNameContaining(search);
             }
             else if (date != null) {
@@ -51,7 +59,7 @@ public class EmployeeWorkEntryController {
             else {
                 employeeWorkEntryList = employeeWorkEntryService.findAll();
             }
-            page = "employee-work-entries";
+            template = "employee-work-entries";
         } else {
             Employee employee = authService.getEmployee();
             if (date != null) {
@@ -59,11 +67,11 @@ public class EmployeeWorkEntryController {
             } else {
                 employeeWorkEntryList = employeeWorkEntryService.findByEmployee(employee);
             }
-            page = "employee-work-entries-user";
+            template = "employee-work-entries-user";
         }
 
         model.addAttribute("entries", employeeWorkEntryList);
-        return page;
+        return template;
     }
 
     @GetMapping("/timesheet/entries/add")
@@ -75,10 +83,15 @@ public class EmployeeWorkEntryController {
     }
 
     @PostMapping("/timesheet/entries/add")
-    public String entryPostAdd(@ModelAttribute("entry") EmployeeWorkEntryCreateDto employeeWorkEntryCreateDto) {
+    public String entryPostAdd(@ModelAttribute("entry") EmployeeWorkEntryCreateDto employeeWorkEntryCreateDto, Model model) {
+       try {
+           employeeWorkEntryService.create(employeeWorkEntryCreateDto);
+           return "redirect:/timesheet/entries/all";
 
-       employeeWorkEntryService.create(employeeWorkEntryCreateDto);
-        return "redirect:/timesheet/entries/all";
+       } catch (IllegalArgumentException e) {
+           model.addAttribute("error", e.getMessage());
+           return "employee-work-entries-add";
+       }
     }
 
     @PostMapping("/timesheet/entries/{id}/remove")

@@ -8,6 +8,7 @@ import com.cafe.account.repositories.EmployeeRepository;
 import com.cafe.account.repositories.PositionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -31,7 +32,12 @@ public class PositionService {
         position.setName(positionDto.getName());
         position.setHourlyRate(positionDto.getHourlyRate());
 
-        return positionRepository.save(position);
+        try {
+            return positionRepository.save(position);
+        } catch (DataIntegrityViolationException e) {
+            // handle unique constraint violation
+            throw new IllegalArgumentException("Такая должность уже существует");
+        }
     }
 
     public void deleteById(Long id) {

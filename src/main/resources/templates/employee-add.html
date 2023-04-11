@@ -20,6 +20,11 @@
                                         Для начала добавьте должности!</p>
                                 </div>
                             </div>
+                            <div th:if="${success}">
+                                <div class="alert alert-success" role="alert">
+                                    <p th:text="${success}"></p>
+                                </div>
+                            </div>
                             <div th:if="${error}">
                                 <div class="alert alert-danger" role="alert">
                                     <p th:text="${error}"></p>
@@ -34,13 +39,13 @@
                                 <label for="phoneNumber">Номер телефона</label>
                             </div>
                             <div th:if="${!positions.isEmpty()}" class="form-floating mb-3">
-                                <label for="positionId">Должность</label>
-<!--                                <select class="form-control" id="positionId" th:field="*{positionId}" required>-->
-<!--                                    <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>-->
-<!--                                </select>-->
-                                <select class="form-control" id="positionId" name="positionId" required>
-                                    <option th:each="pos : ${positions}" th:value="${pos.id}" th:text="${pos.name}"></option>
+                                <select class="form-select" id="positionId" name="positionId" required>
+                                    <option value="">Выберите должность</option>
+                                    <th:block th:each="pos : ${positions}">
+                                        <option th:value="${pos.id}" th:text="${pos.name}"></option>
+                                    </th:block>
                                 </select>
+                                <label for="positionId">Должность</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="username" name="username" placeholder=" " required>

@@ -6,7 +6,6 @@ import com.cafe.account.models.Position;
 import com.cafe.account.service.PositionService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,9 +62,10 @@ public class PositionController {
                                    Model model) {
         try {
             positionService.create(positionDto);
-            return "redirect:/position/all"; // перенаправляем на главную страницу
-        } catch (AuthenticationException ex) {
-            model.addAttribute("error", "Invalid username or password");
+            model.addAttribute("success", "Должность успешно добавлена!");
+            return "position-add"; // перенаправляем на главную страницу
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
             return "position-add";
         }
     }

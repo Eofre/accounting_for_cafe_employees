@@ -6,6 +6,7 @@ import com.cafe.account.models.Employee;
 import com.cafe.account.models.EmployeeWorkEntry;
 import com.cafe.account.repositories.EmployeeWorkEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,11 +36,21 @@ public class EmployeeWorkEntryService {
         employeeWorkEntry.setWorkedHours(employeeWorkEntryCreateDto.getWorkedHours());
         employeeWorkEntry.setEarnings(employeeWorkEntryCreateDto.getWorkedHours() * hourlyRate);
         employeeWorkEntry.setDate(employeeWorkEntryCreateDto.getDate());
-        return employeeWorkEntryRepository.save(employeeWorkEntry);
+
+        try {
+            return employeeWorkEntryRepository.save(employeeWorkEntry);
+        } catch (DataIntegrityViolationException e) {
+            // handle unique constraint violation
+            throw new IllegalArgumentException("Нельзя добавить больше одной записи с одним работником за день");
+        }
     }
 
     public List<EmployeeWorkEntry> findByEmployeeFullNameContaining(String fullName) {
         return employeeWorkEntryRepository.findByEmployeeFullNameContaining(fullName);
+    }
+
+    public List<EmployeeWorkEntry> findByEmployeeFullNameContainingAndDate(String fullName,LocalDate date){
+        return employeeWorkEntryRepository.findByEmployeeFullNameContainingAndDate(fullName, date);
     }
 
     public List<EmployeeWorkEntry> findAllByDate(LocalDate date) {

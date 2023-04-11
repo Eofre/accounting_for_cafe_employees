@@ -44,11 +44,3 @@ public class AuthService {
         return employeeRepository.findByUserId(getUser().orElseThrow().getId());
     }
 }
-
-//    public JwtResponse login(JwtRequest loginRequest) {
-//        return null;
-//    };
-//
-//public JwtResponse refresh(String refreshToken){
-//        return null;
-//        };

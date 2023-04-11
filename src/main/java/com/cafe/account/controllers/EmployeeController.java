@@ -2,18 +2,12 @@ package com.cafe.account.controllers;
 
 import com.cafe.account.dto.employee.EmployeeDto;
 import com.cafe.account.dto.employee.EmployeeUpdateDto;
-import com.cafe.account.dto.position.PositionDto;
-import com.cafe.account.dto.position.PositionUpdateDto;
 import com.cafe.account.models.Employee;
 import com.cafe.account.models.Position;
-import com.cafe.account.repositories.EmployeeRepository;
 import com.cafe.account.service.EmployeeService;
 import com.cafe.account.service.PositionService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +57,9 @@ public class EmployeeController {
         List<Position> positions = positionService.findAll();
         try {
             employeeService.create(employeeDto);
-            return "redirect:/employee/all";
+            model.addAttribute("success", "Работник успешно добавлен!");
+            model.addAttribute("positions",positions);
+            return "employee-add";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("positions",positions);
